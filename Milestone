@@ -1,0 +1,157 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+#define _CRT_SECURE_NO_WARNINGS
+
+/*
+Currently untitled milestone project
+
+Goal of program is to help user decide what clothing to wear
+based on comfortability in previous temperatures compared to current ones.
+
+Created by Ezra Woods
+*/
+
+//Function declaration
+int getShirt(void);
+int isNumeric(char str[]);
+int getWeather1(void);
+int getWeather2(void);
+
+
+int main(void) {
+
+	// Local variable definition.
+	int prevTemp;
+	int curTemp;
+	int shirtType;
+	
+	// Calling the functions
+	prevTemp = getWeather1();
+	curTemp = getWeather2();
+	shirtType = getShirt();
+	
+	// Printing the results of all the functions
+	if (shirtType == 5)
+		printf("Short sleeves\n");
+	else
+		printf("Long sleeves\n");
+
+	printf("%dF\n", prevTemp);
+	printf("%dF\n", curTemp); 
+
+}
+/*
+This function determines whether the user was wearing a longsleeve or shortsleeve shirt.
+*/
+int getShirt(void) {
+
+	// Local variable definition
+	int isValid = 0;
+	char shirtType[2];
+	char shirt;
+
+	printf("What type of shirt were you wearing yesterday? Enter L for long, S for short ");
+	// This loops takes an input L, or S, and returns either 5, or 10, which the main function will convert to long sleeve or short sleeve
+	while (isValid == 0) {
+		fgets(shirtType, 2, stdin);
+
+		if (strcmp(shirtType, "L") == 0) {
+			isValid = 1;
+			shirt = 10;
+		}
+		if (strcmp(shirtType, "S") == 0) {
+			isValid = 1;
+			shirt = 5;
+		}
+
+		
+	}
+	
+	return shirt;
+
+}
+
+
+/*
+This function gets the weather temperature from the user and confirms that it is a numeric
+value before sending it back to main as variable prevTemp.
+*/
+int getWeather1(void){
+
+	// Local variable definition.
+	char previousTemp[4];
+	int isNum = 0;
+	int prevTemp;
+	
+
+	printf("What was the temperature in fahrenheit yesterday? ");
+
+	/*
+	This loop takes weather info in the form input from the user and tests to make sure it is an integer.
+	The string input by the user is then converted into an int (prevTemp) to use later.
+	*/
+	while (isNum == 0) {
+		fgets(previousTemp, 4, stdin);
+		isNum = isNumeric(previousTemp);
+		if (isNum == 0)
+			printf("Try again: ");
+
+		prevTemp = atoi(previousTemp);
+		if (prevTemp > 130 || prevTemp < -100)
+			isNum = 0;
+
+	}
+	return prevTemp;
+}
+
+/*
+This function is the same as getWeather1, just with different variable names.
+I created it this way because C does not support returning multiple variables from functions unless
+an array is being used, which I did not want to get into.
+*/
+int getWeather2(void) {
+
+	// Local variable definition
+	char currentTemp[4];
+	int curTemp;
+	int isNum = 0;
+
+	printf("And what is the temperature today? ");
+
+	// Same loop as getWeather1, just reformatted to use variables of this function.
+	isNum = 0;
+	while (isNum == 0) {
+		fgets(currentTemp, 4, stdin);
+		isNum = isNumeric(currentTemp);
+		if (isNum == 0)
+			printf("Try again: ");
+
+		curTemp = atoi(currentTemp);
+		if (curTemp > 130 || curTemp < -100)
+			isNum = 0;
+
+	}
+	return curTemp;
+}
+
+/*
+This function checks to see if a string inputted by the stdin is numeric or not.
+It was created to prevent the while loop in function getInfo from looping if characters were entered.
+*/
+int isNumeric(char str[]){
+
+	// Local variable definition.
+	int i;
+	i = 0;
+	
+	// Checks if each value in the string is an integer, returns 0 if not.
+	for (i = 0; str[i] != '\0'; ++i) {
+
+		if (isdigit(str[i]) == 0)
+			return 0;
+		return 1;
+	}
+}
